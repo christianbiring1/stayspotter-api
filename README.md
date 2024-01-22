@@ -1,0 +1,1 @@
+# stayspotter-api
