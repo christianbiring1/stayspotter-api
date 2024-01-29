@@ -1,14 +1,30 @@
+const bookings = require('./routes/bookings');
+const favorites = require('./routes/favorites');
+const reviews = require('./routes/reviews');
+const spots = require('./routes/spots');
+const users = require('./routes/users');
+
 const express = require('express');
 const { Sequelize } = require('sequelize');
-
 
 const sequelize = new Sequelize('postgres://christian:Zih&bir22@localhost:5432/stayspotter')
 
 const app = express();
+app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('Hello World')
-});
+app.use('/api/bookings', bookings);
+app.use('/api/favorites', favorites);
+app.use('/api/reviews', reviews);
+app.use('/api/spots', spots);
+app.use('/api/users', users);
+
+
+
+
+
+
+
+
 
 async function testingConnection() {
   try {
@@ -21,9 +37,12 @@ async function testingConnection() {
 
 testingConnection();
 
+const arr = 'image1 https://aws3,... second';
+const newArr = arr.split('https://aws3,...');
+
+console.log(newArr)
+
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`)
-})
+app.listen(port, () => console.log(`App listening on port ${port}`))
