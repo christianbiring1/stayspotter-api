@@ -1,10 +1,15 @@
 const express = require('express');
 const route = express.Router();
 
+const { User } = require('../models');
+
 
 route.post('/', async(req, res) => {
-  const { name, email, password } = req.body;
-  
+  const { username, email, password } = req.body;
+
+  const user = await User.create({ username, email, password });
+
+  res.status(200).send(user);
 })
 // GET ALL USERS
 route.get('/', async(req, res) => {

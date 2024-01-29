@@ -26,23 +26,25 @@ app.use('/api/users', users);
 
 
 
-async function testingConnection() {
-  try {
-    await sequelize.authenticate();
-    console.log('Connection has been established successfully.');
-  } catch (error) {
-    console.error('Unable to connect to the database:', error);
-  }
-}
+// async function testingConnection() {
+//   try {
+//     await sequelize.authenticate();
+//     console.log('Connection has been established successfully.');
+//   } catch (error) {
+//     console.error('Unable to connect to the database:', error);
+//   }
+// }
 
-testingConnection();
+// testingConnection();
 
-const arr = 'image1 https://aws3,... second';
-const newArr = arr.split('https://aws3,...');
+sequelize.sync({ force: true})
+  .then(() => {
+    console.log('Database and tables synced')
+    const port = process.env.PORT || 3000;
+    app.listen(port, () => console.log(`App listening on port ${port}`))
+  })
+  .catch(err => {
+    console.error('Error syncing database:', err);
+  })
 
-console.log(newArr)
 
-
-const port = process.env.PORT || 3000;
-
-app.listen(port, () => console.log(`App listening on port ${port}`))
