@@ -25,7 +25,12 @@ module.exports = (sequelize, DataTypes) => {
       //   is: /^[0-9a-f]{64}$/i
       // }
     }
-  })
+  }, {});
 
+  User.associate = function(models) {
+    User.hasMany(models.Spot, {
+      foreignKey: 'user_id',
+    })
+  }
   return User;
 };
