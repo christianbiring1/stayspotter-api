@@ -38,7 +38,7 @@ app.use('/api/users', users);
 
 // testingConnection();
 
-db.sequelize.sync({ force: true})
+db.sequelize.sync()
   .then(() => {
     console.log('Connected to the database successfully!...')
     const port = process.env.PORT || 3000;
