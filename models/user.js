@@ -13,16 +13,17 @@ module.exports = (sequelize, DataTypes) => {
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
       validate: {
         len: [10, 256]
       }
     },
     hashedPassword: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(),
       allowNull: false,
-      validate: {
-        len: [3, 255]
-      }
+      // validate: {
+      //   is: /^[0-9a-f]{64}$/i
+      // }
     }
   })
 
