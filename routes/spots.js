@@ -20,8 +20,8 @@ route.post('/', async(req, res) => {
 // GET ALL POSTS
 route.get('/', async(req, res) => {
 
-  const spots = [];
-  res.send(spots)
+  const spots = await Spot.findAll();
+  res.status(200).send(spots)
 });
 
 function validateSpot(spot) {
