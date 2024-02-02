@@ -17,18 +17,22 @@ route.post('/', async(req, res) => {
 
   // Look up to the user
   // If exist, return 400 - Bad request
-
-  let user = await User.findOne({ where: { email }});
-  if(user) return res.status(400).send('User with the given email already existed!');
-
-  // If not find, create one
-  // Save it to the database
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
-
-  user = await User.create({ username, email, hashedPassword });
-
-  res.status(200).send(user);
+  try {
+    
+    let user = await User.findOne({ where: { email }});
+    if(user) return res.status(400).send('User with the given email already existed!');
+  
+    // If not find, create one
+    // Save it to the database
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+  
+    user = await User.create({ username, email, hashedPassword });
+    res.status(200).send(user);
+  
+  } catch (error) {
+    res.status(500).send('Internal Server error!')
+  }
 })
 
 // Validate the user object

@@ -13,17 +13,27 @@ route.post('/', async(req, res) => {
 
   if(error) return res.status(400).send(error.details[0].message);
 
+  try {
+    
+    const review = await Review.create({ user_id, spot_id, description, rating });
   
-  const review = await Review.create({ user_id, spot_id, description, rating });
-
-  res.status(200).send(review)
+    res.status(200).send(review)
+  } catch (error) {
+    res.status(500).send('Internal Server error!')
+    //Log the error on the Logging service
+  }
 })
 
 // GET ALL REVIEWS
 route.get('/', async(req, res) => {
-
-  const reviews = Review.findAll();
-  res.status(200).send(reviews);
+  try {
+    const reviews = await Review.findAll();
+    res.status(200).send(reviews);
+   
+  } catch (error) {
+    res.status(500).send('Internal Server error!')
+    //Log the error on the Logging service
+  }
 });
 
 
