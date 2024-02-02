@@ -21,24 +21,7 @@ app.use('/api/users', users);
 
 
 
-
-
-
-
-
-
-// async function testingConnection() {
-//   try {
-//     await sequelize.authenticate();
-//     console.log('Connection has been established successfully.');
-//   } catch (error) {
-//     console.error('Unable to connect to the database:', error);
-//   }
-// }
-
-// testingConnection();
-
-db.sequelize.sync({alter: true})
+db.sequelize.authenticate()
   .then(() => {
     console.log('Connected to the database successfully!...')
     const port = process.env.PORT || 3000;
