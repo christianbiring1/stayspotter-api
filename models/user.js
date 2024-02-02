@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
       validate: {
-        len: [10, 256]
+        len: [10, 256],
+        isEmail: true
       }
     },
     hashedPassword: {
@@ -30,7 +31,10 @@ module.exports = (sequelize, DataTypes) => {
       // }
     }
   }, {
-    tableName: "users"
+    tableName: "users",
+    // toJSON: {
+    //   exclude: ['id']
+    // }
   });
 
   User.associate = function(models) {

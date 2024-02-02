@@ -1,10 +1,17 @@
 const Joi = require('joi');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const express = require('express');
 const route = express.Router();
 
 const { User } = require('../models');
+
+route.get('/', async(req, res) => {
+  const users = await User.findAll()
+
+  res.status(200).send(users)
+})
 
 // SIGN IN
 route.post('/', async(req, res) => {
@@ -35,6 +42,58 @@ route.post('/', async(req, res) => {
     res.status(500).send('Internal Server error!')
   }
 })
+
+
+
+
+// LOGIN
+route.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  // Validate the user input
+  // If invalid, return 400 - Bad request
+  //const { error } = validateUser(req.body);
+  //if (error) return res.status(400).send(error.details[0].message);
+
+  try {
+    // Look up the user
+    const user = await User.findOne({ where: { email } });
+
+    // If the user doesn't exist, return 400 - Bad request
+    if (!user) return res.status(400).send('Invalid email or password.');
+
+    // Check if the provided password is correct
+    const validPassword = await bcrypt.compare(password, user.hashedPassword);
+    if (!validPassword) return res.status(400).send('Invalid email or password.');
+
+    // Generate a token
+    const token = jwt.sign({ userId: user.id }, 'your-secret-key', { expiresIn: '1w' }); // Change 'your-secret-key' to a secret key for JWT
+
+    // Set the token in the response header
+    res.header('x-auth-token', token);
+
+    // Set a cookie with the token that expires in a week
+    res.cookie('authToken', token, { maxAge: 7 * 24 * 60 * 60 * 1000, httpOnly: true });
+
+    // Send user data without sensitive information
+    res.status(200).send(_.pick(user, ['uuid', 'username', 'email']));
+
+  } catch (error) {
+    res.status(500).send('Internal Server Error!');
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Validate the user object
 

@@ -32,7 +32,7 @@ route.get('/:id', async(req, res) => {
   const spot_id = req.params.id;
 
   try {
-    const reviews = await Review.findAll({ where: { spot_id }, include: [{ model: User, as: 'user'}] });
+    const reviews = await Review.findAll({ where: { spot_id }, include: 'user' });
     res.status(200).send(reviews);
    
   } catch (error) {
