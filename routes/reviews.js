@@ -1,10 +1,12 @@
 const express = require('express');
-const { Review } = require('../models');
 const Joi = require('joi');
 
 
+const { Review, Spot, User } = require('../models');
+
 const route = express.Router();
 
+// CREATE A REVIEW
 route.post('/', async(req, res) => {
   
   const { user_id, spot_id, description, rating } = req.body;
@@ -24,10 +26,13 @@ route.post('/', async(req, res) => {
   }
 })
 
-// GET ALL REVIEWS
-route.get('/', async(req, res) => {
+// GET ALL REVIEWS FOR A SPECIFIC SPOT
+route.get('/:id', async(req, res) => {
+
+  const spot_id = req.params.id;
+
   try {
-    const reviews = await Review.findAll();
+    const reviews = await Review.findAll({ where: { spot_id }, include: [{ model: User, as: 'user'}] });
     res.status(200).send(reviews);
    
   } catch (error) {

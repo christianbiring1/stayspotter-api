@@ -107,7 +107,7 @@ function validateSpot(spot) {
     state: Joi.string().required(),
     country: Joi.string().required(),
     name: Joi.string().required(),
-    price: Joi.number().min(1).max(9999)
+    price: Joi.number().min(1).max(9999).required()
   });
 
   return schema.validate(spot);
