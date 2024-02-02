@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const _ = require('lodash');
 const bcrypt = require('bcrypt');
 const express = require('express');
 const route = express.Router();
@@ -28,7 +29,7 @@ route.post('/', async(req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
   
     user = await User.create({ username, email, hashedPassword });
-    res.status(200).send(user);
+    res.status(200).send(_.pick(user, ['uuid', 'username', 'email', 'hashedPassword']));
   
   } catch (error) {
     res.status(500).send('Internal Server error!')
