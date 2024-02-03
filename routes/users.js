@@ -3,8 +3,8 @@ const _ = require('lodash');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const express = require('express');
-const route = express.Router();
 
+const route = express.Router();
 const { User } = require('../models');
 
 route.get('/', async(req, res) => {
@@ -28,7 +28,7 @@ route.post('/', async(req, res) => {
   try {
     
     let user = await User.findOne({ where: { email }});
-    if(user) return res.status(400).send('User with the given email already existed!');
+    if(user) return res.status(400).send('User already registered!');
   
     // If not find, create one
     // Save it to the database
@@ -44,16 +44,14 @@ route.post('/', async(req, res) => {
 })
 
 
-
-
 // LOGIN
 route.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   // Validate the user input
   // If invalid, return 400 - Bad request
-  //const { error } = validateUser(req.body);
-  //if (error) return res.status(400).send(error.details[0].message);
+  const { error } = validateLogin(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
   try {
     // Look up the user
@@ -83,20 +81,7 @@ route.post('/login', async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-// Validate the user object
-
+// Validate the user object on sign up
 function validateUser (user) {
   const schema = Joi.object({
     username: Joi.string().min(3).max(30).required(),
@@ -106,5 +91,15 @@ function validateUser (user) {
 
   return schema.validate(user)
 };
+
+// Validate user on logins
+function validateLogin(user) {
+  const schema = Joi.object({
+    username: Joi.string().required(),
+    password: Joi.string().required()
+  });
+
+  return schema.validate(user)
+}
 
 module.exports = route;
