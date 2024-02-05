@@ -20,15 +20,13 @@ app.use('/api/spots', spots);
 app.use('/api/users', users);
 
 
+const port = process.env.NODE_ENV || 3000;
 
-db.sequelize.authenticate()
-  .then(() => {
-    console.log('Connected to the database successfully!...')
-    const port = process.env.PORT || 3000;
-    app.listen(port, () => console.log(`App listening on port ${port}`))
-  })
-  .catch(err => {
-    console.error('Error syncing database:', err);
-  })
-
-
+app.listen(port, () => {
+  console.log(`App listening on port ${port}`);
+  db.sequelize.authenticate()
+    .then('Connected to the database successfully!...')
+    .catch(err => {
+      console.log('Could not connect o the database...', err);
+    })
+})

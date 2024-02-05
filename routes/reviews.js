@@ -41,6 +41,18 @@ route.get('/:id', async(req, res) => {
   }
 });
 
+route.delete('/:id', async(req, res) => {
+  const review_id = req.params.id;
+
+  try {
+    const review = await Review.findOne({ where: { spot_id }});
+    review.destroy();
+
+    res.status(200).send(review);
+  } catch (error) {
+    res.status(400).send(error)
+  }
+})
 
 function validateReview(review) {
   const schema = Joi.object({
