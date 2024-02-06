@@ -1,5 +1,6 @@
 'use strict';
-// const { Validator } = require('sequelize');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
@@ -26,15 +27,22 @@ module.exports = (sequelize, DataTypes) => {
     hashedPassword: {
       type: DataTypes.STRING(),
       allowNull: false,
-      // validate: {
-      //   is: /^[0-9a-f]{64}$/i
-      // }
     }
   }, {
     tableName: "users",
     // toJSON: {
     //   exclude: ['id']
-    // }
+    // },
+    hooks: {
+      // Hook for generating token before user is created
+      beforeCreate: async (user) => {
+        user.token = await user.generateToken();
+      },
+      // Hook for generating token before user is updated
+      beforeUpdate: async (user) => {
+        user.token = await user.generateToken();
+      }
+    }
   });
 
   User.associate = function(models) {
@@ -45,6 +53,12 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Review, {
       foreignKey: 'user_id'
     })
-  }
+  };
+   User.prototype.generateToken = async function() {
+    // You can customize your token generation logic here
+    const token = jwt.sign({ uuid: this.uuid }, config.get('jwtPrivateKey'), { expiresIn: '1w' });
+    return token;
+  };
+
   return User;
 };

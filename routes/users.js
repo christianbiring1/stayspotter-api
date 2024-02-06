@@ -66,7 +66,8 @@ route.post('/login', async (req, res) => {
     if (!validPassword) return res.status(400).send('Invalid email or password.');
 
     // Generate a token
-    const token = jwt.sign({ userId: user.uuid }, config.get('jwtPrivateKey'), { expiresIn: '1w' }); // Change 'app-secret-key' to a secret key for JWT
+    // const token = jwt.sign({ userId: user.uuid }, config.get('jwtPrivateKey'), { expiresIn: '1w' }); // Change 'app-secret-key' to a secret key for JWT
+    const token = await user.generateToken()
 
     // Set the token in the response header
     res.header('x-auth-token', token);
@@ -76,7 +77,6 @@ route.post('/login', async (req, res) => {
 
     // Send user data without sensitive information
     res.status(200).send(_.pick(user, ['uuid', 'username', 'email']));
-
   } catch (error) {
     res.status(500).send('Internal Server Error!');
   }
@@ -96,7 +96,7 @@ function validateUser (user) {
 // Validate user on logins
 function validateLogin(user) {
   const schema = Joi.object({
-    username: Joi.string().required(),
+    email: Joi.string().email().required(),
     password: Joi.string().required()
   });
 
