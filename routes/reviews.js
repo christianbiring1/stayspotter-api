@@ -45,7 +45,7 @@ route.delete('/:id', async(req, res) => {
   const review_id = req.params.id;
 
   try {
-    const review = await Review.findOne({ where: { spot_id }});
+    const review = await Review.findOne({ where: { id: review_id }});
     review.destroy();
 
     res.status(200).send(review);

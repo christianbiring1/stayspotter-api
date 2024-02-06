@@ -1,17 +1,20 @@
+const express = require('express');
+
 const db = require('./models');
+const logger = require('./middleware/logger');
 const bookings = require('./routes/bookings');
 const favorites = require('./routes/favorites');
 const reviews = require('./routes/reviews');
 const spots = require('./routes/spots');
 const users = require('./routes/users');
 
-const express = require('express');
 // const { Sequelize } = require('sequelize');
 
 // const sequelize = new Sequelize('postgres://christian:Zih&bir22@localhost:5432/stayspotter') already set in the config
 
 const app = express();
 app.use(express.json());
+app.use(logger)
 
 app.use('/api/bookings', bookings);
 app.use('/api/favorites', favorites);
