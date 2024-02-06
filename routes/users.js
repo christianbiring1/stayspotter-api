@@ -2,6 +2,7 @@ const Joi = require('joi');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const config = require('config');
 const express = require('express');
 
 const route = express.Router();
@@ -36,7 +37,7 @@ route.post('/', async(req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
   
     user = await User.create({ username, email, hashedPassword });
-    res.status(200).send(_.pick(user, ['uuid', 'username', 'email', 'hashedPassword']));
+    res.status(200).send(_.pick(user, ['uuid', 'username', 'email']));
   
   } catch (error) {
     res.status(500).send('Internal Server error!')
@@ -65,7 +66,7 @@ route.post('/login', async (req, res) => {
     if (!validPassword) return res.status(400).send('Invalid email or password.');
 
     // Generate a token
-    const token = jwt.sign({ userId: user.id }, 'your-secret-key', { expiresIn: '1w' }); // Change 'your-secret-key' to a secret key for JWT
+    const token = jwt.sign({ userId: user.uuid }, config.get('jwtPrivateKey'), { expiresIn: '1w' }); // Change 'app-secret-key' to a secret key for JWT
 
     // Set the token in the response header
     res.header('x-auth-token', token);

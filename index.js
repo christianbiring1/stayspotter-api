@@ -1,4 +1,5 @@
 const express = require('express');
+const config = require('config');
 
 const db = require('./models');
 const logger = require('./middleware/logger');
@@ -14,13 +15,20 @@ const users = require('./routes/users');
 
 const app = express();
 app.use(express.json());
-app.use(logger)
+app.use(logger) // Logging middleware
 
 app.use('/api/bookings', bookings);
 app.use('/api/favorites', favorites);
 app.use('/api/reviews', reviews);
 app.use('/api/spots', spots);
 app.use('/api/users', users);
+
+
+if(!config.get('jwtPrivateKey')) {
+  console.error('FATAL ERROR: jwtPrivateKey is not defined');
+  process.exit(1)
+}
+
 
 
 const port = process.env.NODE_ENV || 3000;
