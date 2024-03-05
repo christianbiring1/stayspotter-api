@@ -30,9 +30,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     tableName: "users",
-    // toJSON: {
-    //   exclude: ['id']
-    // },
+    toJSON: {
+      exclude: 'id'
+    },
     hooks: {
       // Hook for generating token before user is created
       beforeCreate: async (user) => {
