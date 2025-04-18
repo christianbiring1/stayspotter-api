@@ -1,21 +1,21 @@
 {
   "development": {
     "username": "christian",
-    "password": "Zih&bir22",
+    "password": "SecurePass123!",
     "database": "stayspotter",
     "host": "localhost",
     "dialect": "postgres"
   },
   "test": {
     "username": "christian",
-    "password": "Zih&bir22",
+    "password": "SecurePass123!",
     "database": "stayspotter",
     "host": "localhost",
     "dialect": "postgres"
   },
   "production": {
     "username": "christian",
-    "password": "Zih&bir22",
+    "password": "SecurePass123!",
     "database": "stayspotter",
     "host": "localhost",
     "dialect": "postgres"
